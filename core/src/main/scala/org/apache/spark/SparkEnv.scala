@@ -359,9 +359,10 @@ object SparkEnv extends Logging {
       // We need to set the executor ID before the MetricsSystem is created because sources and
       // sinks specified in the metrics configuration file will want to incorporate this executor's
       // ID into the metrics they report.
-      conf.set("spark.executor.id", executorId)
-      val ms = MetricsSystem.createMetricsSystem("executor", conf, securityManager)
-      ms.start()
+      conf.set(EXECUTOR_ID, executorId)
+      val ms = MetricsSystem.createMetricsSystem(MetricsSystemInstances.EXECUTOR, conf,
+        securityManager)
+      ms.start(conf.get(METRICS_STATIC_SOURCES_ENABLED))
       ms
     }
 
